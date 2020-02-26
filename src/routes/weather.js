@@ -6,12 +6,14 @@ const { ItemModel } = require("../models/Item");
 router.get("/", async (request, response, next) => {
   try {
     const db = await connect();
+    const items = await ItemModel.find();
+    db.connection.close();
+    return response.status(200).json(items);
   } catch (error) {
-    return response.json({ error, message: "Failed to connect with database" });
+    return response
+      .status(500)
+      .json({ error, message: "Failed to connect with database" });
   }
-
-  const items = await ItemModel.find();
-  return response.status(200).json(items);
 });
 
 module.exports = router;
